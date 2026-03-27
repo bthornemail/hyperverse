@@ -1,0 +1,17 @@
+block_id	block_name	range_start	range_end	pages	total_codepoints	status	notes
+variation_selectors	Variation Selectors	U+FE00	U+FE0F	U+FE0x	16	normalized	Selector block as provided by user list
+block_elements	Block Elements	U+2580	U+259F	U+258x-U+259x	32	normalized	Shading/half blocks
+control_plane_header	Control Plane Header	0x1C	0x1F	FS/GS/RS/US	4	normalized	Protocol header bytes, not a Unicode block
+box_drawing	Box Drawing	U+2500	U+257F	U+250x-U+257x	128	normalized	Line/box geometry set
+symbols_legacy_computing	Symbols for Legacy Computing	U+1FB00	U+1FBFF	U+1FB0x-U+1FBFx	256	normalized	Legacy terminal graphics set
+supplemental_arrows_a	Supplemental Arrows-A	U+27F0	U+27FF	U+27Fx	16	normalized	Extended arrow operators
+combining_diacritical_symbols	Combining Diacritical Marks for Symbols	U+20D0	U+20FF	U+20Dx-U+20Fx	48	normalized	Includes unassigned points in block range
+optical_character_recognition	Optical Character Recognition	U+2440	U+245F	U+244x-U+245x	32	normalized	OCR symbols block
+superscripts_subscripts	Superscripts and Subscripts	U+2070	U+209F	U+207x-U+209x	48	normalized	Sup/sub numeric and alpha forms
+number_forms	Number Forms	U+2150	U+218F	U+215x-U+218x	64	normalized	Fractions, roman numerals, forms
+arrows	Arrows	U+2190	U+21FF	U+219x-U+21Fx	112	normalized	Arrow block as listed
+mathematical_operators	Mathematical Operators	U+2200	U+22FF	U+220x-U+22Fx	256	normalized	Operator block
+geometric_shapes	Geometric Shapes	U+25A0	U+25FF	U+25Ax-U+25Fx	96	normalized	Shape block subset shown
+braille_patterns	Braille Patterns	U+2800	U+28FF	U+280x-U+28Fx	256	normalized	Full braille block
+braille_a_6dot	Braille Block A (6-dot closure)	U+2800	U+283F	U+280x-U+283x	64	normalized	Fixed-point Scale A
+braille_b_extended	Braille Block B (extended/control)	U+2840	U+28FF	U+284x-U+28Fx	192	normalized	Fixed-point Scale B

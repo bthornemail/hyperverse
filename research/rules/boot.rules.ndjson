@@ -1,0 +1,1 @@
+{"kind":"ttc.rule.v1","rule_id":"BOOT_RANK_PIPELINE_V1","domain":"boot","inputs":["tick_line"],"when":["router_pipeline_active=true"],"then":["rank_assignment_emitted"],"invariants":["script_pattern_preserved"],"status":"target_state","sources":["research/archive/research/Sovereign Boot for the Triple Tetrahedral Complex.md:99"]}

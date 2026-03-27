@@ -1,0 +1,10 @@
+# Braille Patterns
+# Official Unicode Consortium code chart
+U+2800 	0	1	2	3	4	5	6	7	8	9	A	B	C	D	E	F
+U+280x	⠀	⠁	⠂	⠃	⠄	⠅	⠆	⠇	⠈	⠉	⠊	⠋	⠌	⠍	⠎	⠏
+U+281x	⠐	⠑	⠒	⠓	⠔	⠕	⠖	⠗	⠘	⠙	⠚	⠛	⠜	⠝	⠞	⠟
+U+282x	⠠	⠡	⠢	⠣	⠤	⠥	⠦	⠧	⠨	⠩	⠪	⠫	⠬	⠭	⠮	⠯
+U+283x	⠰	⠱	⠲	⠳	⠴	⠵	⠶	⠷	⠸	⠹	⠺	⠻	⠼	⠽	⠾	⠿
+# Notes:
+# - end of 6-dot cell patterns
+# - as of Unicode version 17.0

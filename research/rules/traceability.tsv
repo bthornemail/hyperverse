@@ -1,0 +1,25 @@
+source_doc_line	rule_id	status	domain	note
+research/archive/research/The 8-Symbol Alphabet as Projective Vertices.md:99	A1	implemented	alphabet	explicit A-header
+research/archive/research/The 8-Symbol Alphabet as Projective Vertices.md:108	A2	target_state	alphabet	explicit A-header A2/A3
+research/archive/research/The 8-Symbol Alphabet as Projective Vertices.md:108	A3	target_state	alphabet	explicit A-header A2/A3
+research/archive/research/Law and Projection.md:494	A10	research_open	projection	explicit A-header
+research/archive/research/Law and Projection.md:182	A11.1	target_state	projection	explicit A-header occurrence 1
+research/archive/research/Law and Projection.md:313	A11.2	target_state	projection	explicit A-header occurrence 2
+research/archive/research/Law and Projection.md:542	A12	research_open	projection	explicit A-header
+research/archive/research/Law and Projection.md:577	A13	research_open	projection	explicit A-header
+research/archive/research/Law and Projection.md:644	A15	research_open	projection	explicit A-header
+research/archive/research/Law and Projection.md:710	A16	research_open	projection	explicit A-header
+research/archive/research/Law and Projection.md:902	A17	target_state	projection	explicit A-header
+research/archive/research/Law and Projection.md:954	A18	target_state	projection	explicit A-header
+research/archive/research/Law and Projection.md:1007	A19	target_state	projection	explicit A-header
+research/archive/research/Law and Projection.md:1121	A20	research_open	projection	explicit A-header
+research/archive/research/Law and Projection.md:1201	A21.1	research_open	projection	explicit A-header occurrence 1
+research/archive/research/Law and Projection.md:1265	A21.2	research_open	projection	explicit A-header occurrence 2
+research/archive/research/Law and Projection.md:1324	A22	research_open	projection	explicit A-header
+research/archive/research/Consensus Promotion Logic..md:22	A23	target_state	consensus	explicit A-header
+research/archive/research/Consensus Promotion Logic..md:87	A24	target_state	consensus	explicit A-header
+research/archive/research/Consensus Promotion Logic..md:154	A25	target_state	consensus	explicit A-header
+research/archive/research/Consensus Promotion Logic..md:234	A26	target_state	consensus	explicit A-header
+research/archive/research/Consensus Promotion Logic..md:298	A27	target_state	consensus	explicit A-header
+research/archive/research/Consensus Promotion Logic..md:354	A29	research_open	consensus	explicit A-header
+research/archive/research/Consensus Promotion Logic..md:412	A30	target_state	consensus	explicit A-header
