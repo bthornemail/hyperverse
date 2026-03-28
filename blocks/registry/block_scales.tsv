@@ -1,5 +1,0 @@
-block_id	range_start	range_end	scale	basis
-control_plane_header	0x1C	0x1F	control	FS/GS/RS/US
-braille_patterns	U+2800	U+28FF	full	Braille Basis
-braille_a_6dot	U+2800	U+283F	A	Braille Basis
-braille_b_extended	U+2840	U+28FF	B	Braille Basis
