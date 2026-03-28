@@ -1,9 +1,0 @@
-urn:ttc:artifact:XX:p0:1e:0f01:t1:b120
-urn:ttc:artifact:xx:p0:16:0b02:t2:b88
-urn:ttc:artifact:Xx:p0:17:0be3:t3:b95
-urn:ttc:artifact:xx:p1:04:0024:t4:b1
-urn:ttc:artifact:Xx:p1:04:0045:t5:b2
-urn:ttc:artifact:xx:p2:08:0066:t6:b3
-urn:ttc:artifact:XX:p2:03:0c37:t7:b255
-urn:ttc:artifact:xx:p0:00:0008:t8:b0
-urn:ttc:artifact:XX:p2:1e:0549:t9:b42
