@@ -1,3 +1,6 @@
+/* LAYER: incidence
+ * Owns Pascal/simplex expansion metadata only.
+ */
 #include "ttc_incidence.h"
 
 static uint32_t ttc_choose_u32(uint32_t n, uint32_t k) {

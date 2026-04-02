@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "ttc_address.h"
 #include "ttc_incidence.h"
 #include "ttc_grammar.h"
 
@@ -33,34 +34,20 @@ typedef struct {
     uint64_t tick;
     int chiral;
     int winner;
-    uint8_t role;
-    uint8_t escape_depth;
-    uint8_t scope_axis;
     int cycle;
-    int lane;
-    int channel;
-    int orient;
-    int quadrant;
-    int addr60;
     int digit;
-    uint32_t incidence_coeff;
     uint8_t byte;
     uint8_t binary;
     uint8_t hexwt;
+    ttc_address address;
 } ttc_witness_step;
 
 int ttc_witness_a13_encode(const uint8_t *in, size_t in_len, uint8_t **out, size_t *out_len);
 int ttc_witness_a13_decode(const uint8_t *in, size_t in_len, uint8_t **out, size_t *out_len);
 int ttc_witness_stream_to_symbols(const uint8_t *stream, size_t stream_len, ttc_witness_symbol **out_symbols, size_t *out_count);
 int ttc_witness_symbols_to_stream(const ttc_witness_symbol *symbols, size_t symbol_count, uint8_t **out_stream, size_t *out_len);
-void ttc_witness_symbol_to_grid(const ttc_witness_symbol *symbol, uint8_t grid[TTC_WITNESS_HEIGHT][TTC_WITNESS_WIDTH]);
 int ttc_witness_encode_step(uint8_t byte, uint64_t tick, ttc_witness_step *out);
 int ttc_witness_encode_step_structured(uint8_t byte, const ttc_incidence *incidence, const ttc_grammar_state *grammar, ttc_witness_step *out);
-void ttc_witness_clear_grid(uint8_t grid[TTC_WITNESS_HEIGHT][TTC_WITNESS_WIDTH]);
-void ttc_witness_place_step(uint8_t grid[TTC_WITNESS_HEIGHT][TTC_WITNESS_WIDTH], const ttc_witness_step *step);
-int ttc_witness_render_ascii(const uint8_t grid[TTC_WITNESS_HEIGHT][TTC_WITNESS_WIDTH], FILE *out);
-int ttc_witness_render_pgm(const uint8_t grid[TTC_WITNESS_HEIGHT][TTC_WITNESS_WIDTH], FILE *out);
-char ttc_witness_ascii_glyph(uint8_t v);
 
 #ifdef __cplusplus
 }

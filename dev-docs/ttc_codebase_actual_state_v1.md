@@ -100,18 +100,19 @@ Form:
 
 All six dotfiles at one leaf share the same framing shape; `.negative` mutates payload bytes.
 
-## 6) Aztec Functionality (Current)
+## 6) Matrix / Aztec Compatibility Functionality (Current)
 
-There are two Aztec-related paths:
+There are two matrix-related paths, with `aztec` retained only as compatibility naming:
 
-1. `ttc_canonical_runtime encode --aztec`
-- Produces per-tick 27x27 ASCII witness grids (`#`/`.`).
+1. `ttc_canonical_runtime encode --matrix`
+- Produces per-tick 27x27 ASCII matrix projections (`#`/`.`).
+- `--aztec` is a compatibility alias only and does not mean standards Aztec.
 - This is projection output, not leaf ABI/object writing.
 
 2. `ttc_encode`/`ttc_decode`/`ttc_witness` and `ttc_fano_aztec`
 - `ttc_encode -m slots` exports 60-slot symbols.
 - `ttc_decode` imports 60-slot symbols back to bytes.
-- `ttc_witness` renders slots as Aztec witness.
+- `ttc_witness` emits witness semantics for later projection.
 - `ttc_fano_aztec` accepts framed bytes (default frame size 16) and emits ascii/raw/json witnesses.
 
 Important constraint:

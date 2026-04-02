@@ -178,7 +178,9 @@ static ttc_rule_version parse_rule(const char *rule) {
 static void usage(const char *argv0) {
     fprintf(stderr,
       "usage:\n"
-      "  %s encode [--aztec|--json] [--rule current|delta64] [--seed N] [--blocks PATH]\n"
+      "  %s encode [--matrix|--aztec|--json] [--rule current|delta64] [--seed N] [--blocks PATH]\n"
+      "    --matrix: emit 27x27 ASCII matrix projections\n"
+      "    --aztec: compatibility alias only; not standards Aztec\n"
       "  %s decode [--blocks PATH]\n",
       argv0, argv0);
 }
@@ -371,7 +373,8 @@ int main(int argc, char **argv) {
 
     if (strcmp(argv[1], "encode") == 0) {
         for (i = 2; i < argc; i++) {
-            if (strcmp(argv[i], "--aztec") == 0) out_mode = OUT_AZTEC;
+            if (strcmp(argv[i], "--matrix") == 0) out_mode = OUT_AZTEC;
+            else if (strcmp(argv[i], "--aztec") == 0) out_mode = OUT_AZTEC;
             else if (strcmp(argv[i], "--json") == 0) out_mode = OUT_JSON;
             else if (strcmp(argv[i], "--rule") == 0 && i + 1 < argc) config.rule_version = parse_rule(argv[++i]);
             else if (strcmp(argv[i], "--seed") == 0 && i + 1 < argc) config.seed = (uint64_t)strtoull(argv[++i], NULL, 0);

@@ -1,3 +1,6 @@
+/* LAYER: runtime
+ * Owns canonical stepping only.
+ */
 #include "ttc_runtime.h"
 
 #include <string.h>

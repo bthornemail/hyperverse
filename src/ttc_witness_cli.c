@@ -1,3 +1,4 @@
+#include "ttc_projection.h"
 #include "ttc_witness.h"
 
 #include <stdio.h>
@@ -78,12 +79,12 @@ int main(int argc, char **argv) {
         size_t s;
         for (s = 0; s < symbol_count; s++) {
             uint8_t grid[TTC_WITNESS_HEIGHT][TTC_WITNESS_WIDTH];
-            ttc_witness_symbol_to_grid(&symbols[s], grid);
+            ttc_projection_symbol_to_grid(&symbols[s], grid);
             if (mode == MODE_ASCII) {
                 printf("symbol %zu\n", s);
-                ttc_witness_render_ascii(grid, stdout);
+                ttc_projection_render_ascii(grid, stdout);
             } else {
-                ttc_witness_render_pgm(grid, stdout);
+                ttc_projection_render_pgm(grid, stdout);
             }
         }
     }

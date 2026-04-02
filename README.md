@@ -23,6 +23,7 @@ Primary framework artifacts:
 - `bin/libttc_framework.a`
 - `bin/libttc_runtime.a`
 - `bin/libttc_witness.a`
+- `bin/libttc_matrix.a`
 - `bin/libttc_aztec.a`
 - `bin/ttc_framework`
 
@@ -32,13 +33,18 @@ Primary umbrella header:
 #include "ttc_framework.h"
 ```
 
+Normative terminology is frozen in:
+- [LEXICON.md](/home/main/Programs/meta-interpreter/docs/LEXICON.md)
+- [LEXICON.json](/home/main/Programs/meta-interpreter/docs/LEXICON.json)
+
 ## Unified Framework
 
 The framework exposes three explicit surfaces under one namespace:
 
 - `runtime`: canonical replay law, versioned by rule set
 - `witness`: slot codec and semantic projection
-- `aztec`: deterministic module-grid transport
+- `matrix`: TTC-specific deterministic reversible byte transport grid
+- `aztec`: compatibility name only, reserved for future standards-compliant framing
 
 Rule defaults:
 
@@ -187,9 +193,17 @@ cat input.bin | ./bin/ttc_canonical_runtime encode --rule delta64 --seed 0x1234
 cat input.bin | ./bin/ttc_framework runtime --rule delta64 --seed 0x1234
 ```
 
-## Aztec Transport
+## Matrix Transport
 
-The framework now includes a deterministic Aztec transport subsystem distinct from the witness layer.
+The framework now includes a deterministic TTC matrix transport subsystem distinct from the witness and projection layers.
+
+Freeze:
+
+- projection renders witness or matrix surfaces
+- transport carries bytes
+- projection is not transport
+- current matrix transport is not standards Aztec
+- `ttc_aztec` is currently a compatibility alias over `ttc_matrix`
 
 Validation:
 
@@ -200,7 +214,8 @@ make aztec-transport-check
 CLI example:
 
 ```bash
-cat artifact.bin | ./bin/ttc_framework aztec-encode --ascii
+cat artifact.bin | ./bin/ttc_framework matrix-encode --ascii
+cat artifact.bin | ./bin/ttc_framework aztec-encode --ascii   # compatibility alias only
 ```
 
 ## Factoradic 5040 Trie

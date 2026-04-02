@@ -1,3 +1,4 @@
+#include "ttc_projection.h"
 #include "ttc_witness.h"
 
 #include <stdio.h>
@@ -52,9 +53,11 @@ static void emit_json(const uint8_t grid[TTC_WITNESS_HEIGHT][TTC_WITNESS_WIDTH],
     printf("  \"steps\":[\n");
     for (i = 0; i < step_count; i++) {
         const ttc_witness_step *s = &steps[i];
-        printf("    {\"tick\":%llu,\"byte\":%u,\"binary\":%u,\"hexwt\":%u,\"chiral\":%d,\"winner\":%d,\"cycle\":%d,\"lane\":%d,\"channel\":%d,\"orient\":%d,\"quadrant\":%d,\"addr60\":%d,\"digit\":%d}%s\n",
+        printf("    {\"tick\":%llu,\"byte\":%u,\"binary\":%u,\"hexwt\":%u,\"chiral\":%d,\"winner\":%d,\"cycle\":%d,\"lane\":%u,\"channel\":%u,\"orient\":%u,\"quadrant\":%u,\"slot\":%u,\"ring_index\":%u,\"addr_word\":%u,\"incidence_coeff\":%u,\"digit\":%d}%s\n",
                (unsigned long long)s->tick, s->byte, s->binary, s->hexwt, s->chiral, s->winner,
-               s->cycle, s->lane, s->channel, s->orient, s->quadrant, s->addr60, s->digit,
+               s->cycle, (unsigned)s->address.lane, (unsigned)s->address.channel, (unsigned)s->address.orient,
+               (unsigned)s->address.quadrant, (unsigned)s->address.slot, (unsigned)s->address.ring_index,
+               (unsigned)s->address.addr_word, (unsigned)s->address.incidence_coeff, s->digit,
                (i + 1u < step_count) ? "," : "");
     }
     printf("  ],\n");
@@ -113,7 +116,7 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    ttc_witness_clear_grid(grid);
+    ttc_projection_clear_grid(grid);
     for (offset = 0; offset + (size_t)frame_bytes <= buf_len; offset += (size_t)frame_bytes) {
         size_t j;
         for (j = 0; j < (size_t)frame_bytes; j++) {
@@ -125,7 +128,7 @@ int main(int argc, char **argv) {
                 fprintf(stderr, "witness projection failure\n");
                 return 1;
             }
-            ttc_witness_place_step(grid, &step);
+            ttc_projection_place_step(grid, &step);
             if (step_count == step_cap) {
                 size_t new_cap = step_cap ? step_cap * 2u : 64u;
                 next = (ttc_witness_step *)realloc(steps, new_cap * sizeof(*steps));
@@ -143,9 +146,9 @@ int main(int argc, char **argv) {
     }
 
     if (mode == MODE_ASCII) {
-        ttc_witness_render_ascii(grid, stdout);
+        ttc_projection_render_ascii(grid, stdout);
     } else if (mode == MODE_RAW) {
-        ttc_witness_render_pgm(grid, stdout);
+        ttc_projection_render_pgm(grid, stdout);
     } else {
         emit_json(grid, steps, step_count, frame_bytes);
     }

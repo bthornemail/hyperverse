@@ -1,7 +1,9 @@
+/* LAYER: witness
+ * Owns semantic witness construction only.
+ */
 #include "ttc_witness.h"
 
 #include <stdlib.h>
-#include <string.h>
 
 static const int TTC_FANO_LINES[7][3] = {
     {0,1,3}, {0,2,5}, {0,4,6},
@@ -10,13 +12,6 @@ static const int TTC_FANO_LINES[7][3] = {
 
 static const uint8_t TTC_HEX_WEIGHT[8] = {
     0x01, 0x02, 0x04, 0x40, 0x10, 0x08, 0x20, 0x80
-};
-
-static const int TTC_AZTEC_TABLE[TTC_WITNESS_SYMBOL_SLOTS][2] = {
-    {17,13},{16,17},{11,17},{ 9,15},{ 9,11},{12, 9},{18, 8},{18,12},{18,16},{15,18},{10,18},{ 8,16},{ 8,12},{ 9, 8},{14, 8},
-    {19,13},{18,19},{11,19},{ 7,17},{ 7,11},{10, 7},{17, 7},{20,10},{20,16},{17,20},{10,20},{ 6,18},{ 6,12},{ 7, 6},{14, 6},
-    {21,13},{20,21},{11,21},{ 5,19},{ 5,11},{ 8, 5},{17, 5},{22, 8},{22,16},{19,22},{10,22},{ 4,20},{ 4,12},{ 5, 4},{14, 4},
-    {23,13},{22,23},{11,23},{ 3,21},{ 3,11},{ 6, 3},{17, 3},{24, 6},{24,16},{21,24},{10,24},{ 2,22},{ 2,12},{ 3, 2},{14, 2}
 };
 
 static void *ttc_realloc_array(void *ptr, size_t elem_size, size_t count) {
@@ -68,31 +63,6 @@ static int ttc_factoradic_digit(int hexwt, int radix) {
         return 0;
     }
     return hexwt % radix;
-}
-
-static int ttc_address_from_structure(const ttc_incidence *incidence, const ttc_grammar_state *grammar, int winner, int cycle, ttc_witness_step *out) {
-    int lane;
-    int channel;
-    int orient;
-    int quadrant;
-    int radix;
-    if (!incidence || !grammar || !out) {
-        return TTC_WITNESS_ERR_ARG;
-    }
-    lane = (int)((incidence->lane_mod + grammar->scope_axis + grammar->escape_depth) % 15u);
-    channel = (winner + grammar->role + grammar->header8_class) % 4;
-    orient = ((cycle / 15) + (winner % 2) + grammar->structural_anchor + incidence->branch) % 4;
-    quadrant = channel * 4 + orient;
-    radix = ((incidence->layer % 10u) + 1u);
-
-    out->lane = lane;
-    out->channel = channel;
-    out->orient = orient;
-    out->quadrant = quadrant;
-    out->addr60 = (quadrant * 15 + lane) % 60;
-    out->incidence_coeff = incidence->trinomial_coeff;
-    out->digit = ttc_factoradic_digit(out->hexwt + (int)(incidence->trinomial_coeff % 10u), radix);
-    return TTC_WITNESS_OK;
 }
 
 int ttc_witness_a13_encode(const uint8_t *in, size_t in_len, uint8_t **out, size_t *out_len) {
@@ -251,36 +221,6 @@ int ttc_witness_symbols_to_stream(const ttc_witness_symbol *symbols, size_t symb
     return TTC_WITNESS_OK;
 }
 
-char ttc_witness_ascii_glyph(uint8_t v) {
-    if (v == 0u) return ' ';
-    if (v <= 1u) return '.';
-    if (v <= 2u) return ':';
-    if (v <= 3u) return '-';
-    if (v <= 4u) return '=';
-    if (v <= 5u) return '+';
-    if (v <= 6u) return '*';
-    if (v <= 7u) return '#';
-    if (v <= 8u) return '@';
-    return '%';
-}
-
-void ttc_witness_symbol_to_grid(const ttc_witness_symbol *symbol, uint8_t grid[TTC_WITNESS_HEIGHT][TTC_WITNESS_WIDTH]) {
-    int i;
-    memset(grid, 0, TTC_WITNESS_HEIGHT * TTC_WITNESS_WIDTH);
-    if (!symbol) {
-        return;
-    }
-    for (i = 0; i < TTC_WITNESS_SYMBOL_SLOTS; i++) {
-        int x = TTC_AZTEC_TABLE[i][0];
-        int y = TTC_AZTEC_TABLE[i][1];
-        int winner = ttc_fano_winner((uint64_t)i, (int)(((uint64_t)i / 7u) % 2u));
-        uint8_t b = symbol->coords[i];
-        uint8_t hexwt = ttc_braille_hexwt(b);
-        uint8_t intensity = (uint8_t)(((hexwt + winner) % 10) + 1);
-        grid[y][x] = intensity;
-    }
-}
-
 int ttc_witness_encode_step(uint8_t byte, uint64_t tick, ttc_witness_step *out) {
     ttc_incidence incidence;
     ttc_grammar_state grammar;
@@ -304,6 +244,7 @@ int ttc_witness_encode_step(uint8_t byte, uint64_t tick, ttc_witness_step *out) 
 int ttc_witness_encode_step_structured(uint8_t byte, const ttc_incidence *incidence, const ttc_grammar_state *grammar, ttc_witness_step *out) {
     int cycle;
     int winner;
+    int radix;
     if (!out || !incidence || !grammar) {
         return TTC_WITNESS_ERR_ARG;
     }
@@ -312,69 +253,15 @@ int ttc_witness_encode_step_structured(uint8_t byte, const ttc_incidence *incide
     out->binary = byte;
     out->hexwt = ttc_braille_hexwt(byte);
     out->chiral = (int)incidence->chiral;
-    out->role = (uint8_t)grammar->role;
-    out->escape_depth = grammar->escape_depth;
-    out->scope_axis = grammar->scope_axis;
     winner = ttc_fano_winner(incidence->tick, out->chiral);
     cycle = (int)(incidence->tick / 7u);
+    radix = (int)((incidence->layer % 10u) + 1u);
 
     out->winner = winner;
     out->cycle = cycle;
-    return ttc_address_from_structure(incidence, grammar, winner, cycle, out);
-}
-
-void ttc_witness_clear_grid(uint8_t grid[TTC_WITNESS_HEIGHT][TTC_WITNESS_WIDTH]) {
-    memset(grid, 0, TTC_WITNESS_HEIGHT * TTC_WITNESS_WIDTH);
-}
-
-void ttc_witness_place_step(uint8_t grid[TTC_WITNESS_HEIGHT][TTC_WITNESS_WIDTH], const ttc_witness_step *step) {
-    int x;
-    int y;
-    if (!grid || !step) {
-        return;
-    }
-    if (step->addr60 < 0 || step->addr60 >= 60) {
-        return;
-    }
-    x = TTC_AZTEC_TABLE[step->addr60][0];
-    y = TTC_AZTEC_TABLE[step->addr60][1];
-    grid[y][x] = (uint8_t)(step->digit + 1);
-}
-
-int ttc_witness_render_ascii(const uint8_t grid[TTC_WITNESS_HEIGHT][TTC_WITNESS_WIDTH], FILE *out) {
-    int y;
-    int x;
-    if (!grid || !out) {
+    if (ttc_address_from_structure(incidence, grammar, (uint8_t)winner, &out->address) != 0) {
         return TTC_WITNESS_ERR_ARG;
     }
-    for (y = 0; y < TTC_WITNESS_HEIGHT; y++) {
-        for (x = 0; x < TTC_WITNESS_WIDTH; x++) {
-            fputc(ttc_witness_ascii_glyph(grid[y][x]), out);
-        }
-        fputc('\n', out);
-    }
-    return TTC_WITNESS_OK;
-}
-
-int ttc_witness_render_pgm(const uint8_t grid[TTC_WITNESS_HEIGHT][TTC_WITNESS_WIDTH], FILE *out) {
-    int y;
-    int x;
-    if (!grid || !out) {
-        return TTC_WITNESS_ERR_ARG;
-    }
-    fprintf(out, "P2\n%d %d\n255\n", TTC_WITNESS_WIDTH, TTC_WITNESS_HEIGHT);
-    for (y = 0; y < TTC_WITNESS_HEIGHT; y++) {
-        for (x = 0; x < TTC_WITNESS_WIDTH; x++) {
-            int px = grid[y][x] * 25;
-            if (px > 255) {
-                px = 255;
-            }
-            fprintf(out, "%d", px);
-            if (x + 1 < TTC_WITNESS_WIDTH) {
-                fputc(' ', out);
-            }
-        }
-        fputc('\n', out);
-    }
+    out->digit = ttc_factoradic_digit(out->hexwt + (int)(incidence->trinomial_coeff % 10u), radix);
     return TTC_WITNESS_OK;
 }

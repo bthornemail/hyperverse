@@ -11,9 +11,11 @@ static void usage(const char *argv0) {
         "  %s witness-slot-encode\n"
         "  %s witness-slot-decode\n"
         "  %s witness-render\n"
-        "  %s aztec-encode [--ascii|--pbm|--pgm] [--module-px N]\n"
-        "  %s aztec-decode\n",
-        argv0, argv0, argv0, argv0, argv0, argv0);
+        "  %s matrix-encode [--ascii|--pbm|--pgm] [--module-px N]\n"
+        "  %s matrix-decode\n"
+        "  %s aztec-encode [compat alias; not standards Aztec]\n"
+        "  %s aztec-decode [compat alias; not standards Aztec]\n",
+        argv0, argv0, argv0, argv0, argv0, argv0, argv0, argv0);
 }
 
 static uint8_t *read_all_stdin(size_t *out_len) {
@@ -62,15 +64,20 @@ static int cmd_runtime(int argc, char **argv) {
         ttc_event ev;
         ttc_incidence incidence;
         ttc_grammar_state grammar;
+        ttc_address address;
         if (ttc_runtime_step(&rt, (uint8_t)ch, &ev) != 0) {
             return 1;
         }
         ttc_incidence_from_tick(ev.tick, ev.winner, &incidence);
         ttc_grammar_interpret_byte(ev.input, escape_depth, &grammar);
         escape_depth = grammar.escape_depth;
-        printf("{\"rule_version\":%d,\"tick\":%llu,\"input\":%u,\"state8\":%u,\"curr_state\":%llu,\"incidence_coeff\":%u,\"grammar_role\":%u,\"escape_depth\":%u}\n",
+        if (ttc_address_from_structure(&incidence, &grammar, ev.winner, &address) != 0) {
+            return 1;
+        }
+        printf("{\"rule_version\":%d,\"tick\":%llu,\"input\":%u,\"state8\":%u,\"curr_state\":%llu,\"incidence_coeff\":%u,\"grammar_role\":%u,\"escape_depth\":%u,\"address_slot\":%u,\"address_lane\":%u,\"address_channel\":%u}\n",
                (int)ev.rule_version, (unsigned long long)ev.tick, ev.input, ev.state8,
-               (unsigned long long)ev.curr_state, incidence.trinomial_coeff, (unsigned)grammar.role, (unsigned)grammar.escape_depth);
+               (unsigned long long)ev.curr_state, incidence.trinomial_coeff, (unsigned)grammar.role, (unsigned)grammar.escape_depth,
+               (unsigned)address.slot, (unsigned)address.lane, (unsigned)address.channel);
     }
     return 0;
 }
@@ -200,17 +207,17 @@ static int cmd_witness_render(void) {
     }
     if (symbol_count > 0u) {
         uint8_t grid[TTC_WITNESS_HEIGHT][TTC_WITNESS_WIDTH];
-        ttc_witness_symbol_to_grid(&symbols[0], grid);
+        ttc_projection_symbol_to_grid(&symbols[0], grid);
         free(symbols);
-        return ttc_witness_render_ascii(grid, stdout) == TTC_WITNESS_OK ? 0 : 1;
+        return ttc_projection_render_ascii(grid, stdout) == TTC_WITNESS_OK ? 0 : 1;
     }
     free(symbols);
     return 0;
 }
 
-static int cmd_aztec_encode(int argc, char **argv) {
-    ttc_aztec_symbol sym;
-    ttc_aztec_policy policy;
+static int cmd_matrix_encode(int argc, char **argv) {
+    ttc_matrix_symbol sym;
+    ttc_matrix_policy policy;
     size_t len = 0;
     uint8_t *buf;
     unsigned module_px = 4u;
@@ -231,19 +238,19 @@ static int cmd_aztec_encode(int argc, char **argv) {
 
     buf = read_all_stdin(&len);
     if (len > 0u && !buf) return 1;
-    ttc_aztec_policy_default(&policy);
-    ttc_aztec_symbol_init(&sym);
-    rc = ttc_aztec_encode_bytes(buf, len, &policy, &sym);
+    ttc_matrix_policy_default(&policy);
+    ttc_matrix_symbol_init(&sym);
+    rc = ttc_matrix_encode_bytes(buf, len, &policy, &sym);
     free(buf);
-    if (rc != TTC_AZTEC_OK) return 1;
-    if (mode == MODE_ASCII) rc = ttc_aztec_render_ascii(&sym, stdout);
-    else if (mode == MODE_PBM) rc = ttc_aztec_render_pbm(&sym, stdout);
-    else rc = ttc_aztec_render_pgm(&sym, module_px, stdout);
-    ttc_aztec_symbol_free(&sym);
-    return rc == TTC_AZTEC_OK ? 0 : 1;
+    if (rc != TTC_MATRIX_OK) return 1;
+    if (mode == MODE_ASCII) rc = ttc_matrix_render_ascii(&sym, stdout);
+    else if (mode == MODE_PBM) rc = ttc_matrix_render_pbm(&sym, stdout);
+    else rc = ttc_matrix_render_pgm(&sym, module_px, stdout);
+    ttc_matrix_symbol_free(&sym);
+    return rc == TTC_MATRIX_OK ? 0 : 1;
 }
 
-static int cmd_aztec_decode(void) {
+static int cmd_matrix_decode(void) {
     size_t len = 0;
     uint8_t *buf = read_all_stdin(&len);
     uint8_t *out = NULL;
@@ -254,9 +261,9 @@ static int cmd_aztec_decode(void) {
         free(buf);
         return 1;
     }
-    rc = ttc_aztec_decode_modules(buf, 27u, 27u, &out, &out_len, NULL);
+    rc = ttc_matrix_decode_modules(buf, 27u, 27u, &out, &out_len, NULL);
     free(buf);
-    if (rc != TTC_AZTEC_OK) {
+    if (rc != TTC_MATRIX_OK) {
         free(out);
         return 1;
     }
@@ -274,8 +281,10 @@ int main(int argc, char **argv) {
     if (strcmp(argv[1], "witness-slot-encode") == 0) return cmd_witness_slot_encode();
     if (strcmp(argv[1], "witness-slot-decode") == 0) return cmd_witness_slot_decode();
     if (strcmp(argv[1], "witness-render") == 0) return cmd_witness_render();
-    if (strcmp(argv[1], "aztec-encode") == 0) return cmd_aztec_encode(argc - 2, argv + 2);
-    if (strcmp(argv[1], "aztec-decode") == 0) return cmd_aztec_decode();
+    if (strcmp(argv[1], "matrix-encode") == 0) return cmd_matrix_encode(argc - 2, argv + 2);
+    if (strcmp(argv[1], "matrix-decode") == 0) return cmd_matrix_decode();
+    if (strcmp(argv[1], "aztec-encode") == 0) return cmd_matrix_encode(argc - 2, argv + 2);
+    if (strcmp(argv[1], "aztec-decode") == 0) return cmd_matrix_decode();
     usage(argv[0]);
     return 1;
 }

@@ -1,3 +1,4 @@
+#include "ttc_projection.h"
 #include "ttc_witness.h"
 
 #include <stdio.h>
@@ -46,11 +47,11 @@ static void emit_ascii(const ttc_witness_symbol *symbols, size_t count) {
         uint8_t grid[TTC_WITNESS_HEIGHT][TTC_WITNESS_WIDTH];
         int y;
         int x;
-        ttc_witness_symbol_to_grid(&symbols[i], grid);
+        ttc_projection_symbol_to_grid(&symbols[i], grid);
         printf("symbol %zu\n", i);
         for (y = 0; y < TTC_WITNESS_HEIGHT; y++) {
             for (x = 0; x < TTC_WITNESS_WIDTH; x++) {
-                putchar(ttc_witness_ascii_glyph(grid[y][x]));
+                putchar(ttc_projection_ascii_glyph(grid[y][x]));
             }
             putchar('\n');
         }
@@ -76,8 +77,8 @@ static void emit_pgm(const ttc_witness_symbol *symbols, size_t count) {
     if (count == 0) {
         return;
     }
-    ttc_witness_symbol_to_grid(&symbols[0], grid);
-    ttc_witness_render_pgm(grid, stdout);
+    ttc_projection_symbol_to_grid(&symbols[0], grid);
+    ttc_projection_render_pgm(grid, stdout);
 }
 
 static void emit_json(const ttc_witness_symbol *symbols, size_t count, const uint8_t *a13, size_t a13_len) {

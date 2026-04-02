@@ -1,3 +1,6 @@
+/* LAYER: grammar
+ * Owns structural interpretation of control symbols only.
+ */
 #include "ttc_grammar.h"
 
 void ttc_grammar_interpret_byte(uint8_t input, uint8_t prior_escape_depth, ttc_grammar_state *out) {
