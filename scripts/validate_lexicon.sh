@@ -38,7 +38,10 @@ for pattern in "${forbidden_patterns[@]}"; do
     -g '!docs/ttc_authoritative_lexicon_v1.md' \
     -g '!docs/LEXICON.md' \
     -g '!docs/LEXICON.json' \
-    -g '!scripts/validate_lexicon.sh' >/tmp/ttc_lexicon_hits.txt 2>/dev/null; then
+    -g '!docs/GOVERNANCE_ALLOWLIST.json' \
+    -g '!scripts/validate_lexicon.sh' \
+    -g '!scripts/governance_audit.py' \
+    -g '!scripts/validate_governance_audit.sh' >/tmp/ttc_lexicon_hits.txt 2>/dev/null; then
     echo "lexicon violation: forbidden phrase '$pattern'" >&2
     cat /tmp/ttc_lexicon_hits.txt >&2
     exit 1

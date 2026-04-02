@@ -1,0 +1,49 @@
+{
+  "entries": [
+    {
+      "path_regex": "^Makefile$",
+      "conflict_class": "reserved_name_misuse",
+      "line_regex": "aztec-transport-check|aztec-std-placeholder|aztec\\.txt|ttc_aztec_std"
+    },
+    {
+      "path_regex": "^README\\.md$",
+      "conflict_class": "reserved_name_misuse",
+      "line_regex": "aztec_legacy\\.txt|artifacts/aztec\\.(pgm|json)|aztec-transport-check|aztec-encode"
+    },
+    {
+      "path_regex": "^dev-docs/ttc_codebase_actual_state_v1\\.md$",
+      "conflict_class": "reserved_name_misuse",
+      "line_regex": "Matrix / Aztec Compatibility Functionality|--aztec|aztec\\.pos|Aztec is projection/import-export"
+    },
+    {
+      "path_regex": "^src/ttc_canonical_runtime\\.c$",
+      "conflict_class": "reserved_name_misuse",
+      "line_regex": "--aztec|OUT_AZTEC"
+    },
+    {
+      "path_regex": "^src/ttc_framework_cli\\.c$",
+      "conflict_class": "reserved_name_misuse",
+      "line_regex": "aztec-encode|aztec-decode"
+    },
+    {
+      "path_regex": "^src/ttc_aztec\\.(c|h)$",
+      "conflict_class": "reserved_name_misuse",
+      "line_regex": ".+"
+    },
+    {
+      "path_regex": "^scripts/validate_aztec_transport\\.sh$",
+      "conflict_class": "reserved_name_misuse",
+      "line_regex": "aztec-encode|aztec-decode|aztec_ascii"
+    },
+    {
+      "path_regex": "^scripts/materialize_trie_artifacts\\.sh$",
+      "conflict_class": "reserved_name_misuse",
+      "line_regex": "aztec\\.txt"
+    },
+    {
+      "path_regex": "^dev-docs/ttc_canonical_spec_v1\\.md$",
+      "conflict_class": "reserved_name_misuse",
+      "line_regex": "Aztec projection witness"
+    }
+  ]
+}

@@ -117,7 +117,7 @@ Pascal is recurrence over relations.
 ## 7. Grammar Law
 
 ```text
-interprets(bytes, structure)
+interprets(incidence, grammar)
 ```
 
 Control anchors:
@@ -131,6 +131,7 @@ US   -> boundary axis
 NULL -> anchor
 ```
 
+Grammar interprets bytes under incidence-conditioned structure.
 This is projective structure, not geometry.
 
 ## 8. Address Law

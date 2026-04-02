@@ -40,6 +40,9 @@ Normative terminology is frozen in:
 Normative system structure is frozen in:
 - [ONTOLOGY.md](/home/main/Programs/meta-interpreter/docs/ONTOLOGY.md)
 
+Governance audit policy and exemptions are driven by:
+- [GOVERNANCE_ALLOWLIST.json](/home/main/Programs/meta-interpreter/docs/GOVERNANCE_ALLOWLIST.json)
+
 ## Unified Framework
 
 The framework exposes three explicit surfaces under one namespace:
@@ -53,6 +56,21 @@ Rule defaults:
 
 - `TTC_RULE_V1_CURRENT` remains the default authoritative runtime law
 - `TTC_RULE_V2_DELTA64` is available only through explicit rule selection
+
+## Governance Audit
+
+Run the repo-wide governance audit:
+
+```bash
+make governance-audit
+```
+
+This writes:
+- `artifacts/governance/active_audit.ndjson`
+- `artifacts/governance/archive_audit.ndjson`
+- `artifacts/governance/summary.txt`
+
+Active surfaces hard-fail. `archive/` and `research/` are warn-only in v1.
 
 ## Run End-to-End
 

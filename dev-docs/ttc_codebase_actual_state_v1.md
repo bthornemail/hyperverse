@@ -158,7 +158,7 @@ cat input.bin | ./bin/ttc_canonical_runtime encode --blocks blocks > /tmp/board.
 printf '120 88 95\n' | ./scripts/ttc_busybox.sh --out-root artifacts
 ```
 
-### C) Aztec position import/export boundary
+### C) Matrix compatibility position import/export boundary
 
 ```bash
 cat artifact.bin | ./bin/ttc_encode -m slots > aztec.pos

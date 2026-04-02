@@ -1,0 +1,4 @@
+active_failures=0
+historical_warnings=13
+warn:missing_required_clarification=6
+warn:reserved_name_misuse=7
