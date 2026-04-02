@@ -37,6 +37,9 @@ Normative terminology is frozen in:
 - [LEXICON.md](/home/main/Programs/meta-interpreter/docs/LEXICON.md)
 - [LEXICON.json](/home/main/Programs/meta-interpreter/docs/LEXICON.json)
 
+Normative system structure is frozen in:
+- [ONTOLOGY.md](/home/main/Programs/meta-interpreter/docs/ONTOLOGY.md)
+
 ## Unified Framework
 
 The framework exposes three explicit surfaces under one namespace:
